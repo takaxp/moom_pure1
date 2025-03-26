@@ -1,0 +1,114 @@
+2021-03-24  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.6.0
+	- no changes
+
+	* moom.el: version 1.6.0
+	- [breaking change] moom-change-frame-width-max is obsoleted
+	- [breaking change] moom-change-frame-height-max has been removed
+	- [improve] management of cycle height
+	- [new] keybindings for moom-fill-width and moom-fill-height
+	- [new] moom-command-history-length
+	- [new feature] Undo
+
+2021-03-06  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.5.0
+	- no changes
+
+	* moom.el: version 1.5.0
+	- [breaking change] moom-multi-monitors-support is t as default
+	- [new] moom-use-font-module
+	- [new] moom-update-user-margin
+	- [new] moom-cycle-monitors
+	- [improve] moom-check-user-margin
+	- [improve] Support Windows 10 and dual monitors
+	- [improve] Management of local margins in Windows 10
+	  - moom-fill-screen
+	  - moom-fill-width
+	  - moom-fill-height
+	- [new feature] disable font module by configuration
+
+2021-02-11  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.4.0
+	- Count up just to sync the version of moom.el
+
+	* moom.el: version 1.4.0
+	- [breaking change] moom-screen-margin is obsoleted
+	- [new] moom-change-frame-width-max
+	- [new] moom-change-frame-height-max
+	- [new] moom-before-setup-hook
+	- [new] moom-user-margin
+	- [new] moom-print-monitors
+	- [new] moom-jump-to-monitor
+	- [improve] Disable some hooks when restoring the last status
+	- [improve] User friendly format to show frame status in mini buffer
+	- [improve] Keep the current buffer when deleting a window
+	- [new feature] Support Linux (GTK) and Windows
+	- [new feature] Support multi monitors on macOS and Windows 10
+
+2020-05-31  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.3.0
+	- [improve] Detecting fonts with moom-font--extract-family-name
+	- [improve] moom-font-ja and moom-font-ascii support scale option
+
+	* moom.el: version 1.3.0
+	- [breaking change] moom-font-init-size is now internal
+	- [improve] Prevent writing moom status to message buffer
+	- [improve] Frame will stay	in display region when resizing
+	- [new] moom-fill-height
+	- [new] moom-split-window
+	- [new] moom-delete-windows
+	- [new] moom-split-window-hook
+	- [new] moom-delete-window-hook
+	- [new feature] Fit frame to vertical or horizontal center line
+	  - [new] moom-move-frame-to-centerline-from-left
+	  - [new] moom-move-frame-to-centerline-from-right
+	  - [new] moom-move-frame-to-centerline-from-top
+	  - [new] moom-move-frame-to-centerline-from-bottom
+	- [new feature] Centering for some commands
+	  - moom-command-with-centering controls which command can centering
+	- [new feature] Support line-number-mode
+	  - moom-display-line-numbers-width controls the default digit
+	- [update] moom-cycle-frame-height
+
+2018-05-18  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.2.0
+	- [breaking change]	Remove moom-font-ja variable, switched to a function
+	- [breaking change] Remove moom-font-ascii variable, switched to a function
+	- [new feature] Support auto detection of the default fonts
+	- [new] moom-font-ja (as a function)
+	- [new] moom-font-ascii (as a function)
+
+	* moom.el: version 1.2.0
+	- [new feature] Support setting of screen margins by moom-screen-margin
+	- [improve]	Calculating	frame columns and height lines
+	- [improve]	Calculating	frame width and height in pixels
+	- [improve] Centering frame in Linux and Windows
+
+2018-05-06  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.1.0
+	- [new] moom-font-table
+	- [new] moom-font--extract-family-name
+	- [new] moom-font-print-name-at-point
+	- [update] moom-font-ja
+
+	* moom.el: version 1.1.0
+	- [new] moom-fill-band-options
+	- [new] moom-scaling-gradient
+	- [new] moom-generate-font-table
+	- [new] moom-recommended-keybindings
+	- [update] moom-fill-band
+	- [update] moom-move-frame-to-center
+	- [update] moom-print-status
+	- [update] moom-toggle-font-module
+
+2018-04-23  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* moom-font.el: version 1.0.0
+
+	* moom.el: version 1.0.0

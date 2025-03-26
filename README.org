@@ -1,0 +1,480 @@
+#+title: Moom - A Moom port to GNU Emacs
+#+startup: showall
+
+/Make your dominant hand FREE from your mouse/ :)
+
+=(temporary repository) moom.el without transient-related module=
+
+* Setup
+
+After installing =moom.el= and =moom-font.el= (optional), activate =moom= by =(moom-mode 1)= in your =init.el=. This module requires [[https://www.gnu.org/software/emacs/][GNU Emacs]] *25.1 or later*.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  ;; add settings here ...
+  ;; (setq moom-use-font-module nil)
+  (moom-mode 1))
+#+end_src
+
+or
+
+#+begin_src emacs-lisp
+(when (require 'moom nil t)
+  ;; add settings here ...
+  ;; (setq moom-use-font-module nil)
+  (moom-mode 1))
+#+end_src
+
+If you don't want to change font size when resizing frame size, please configure ~moom-use-font-module~ before activating =moom-mode= by ~(moom-mode 1)~.
+
+* A set of commands to control frame position and size by keyboard
+
+#+caption: demo for moving and zooming, frame maximized
+[[https://github.com/takaxp/contents/blob/master/moom/demo1.gif]]
+
+Note - This module has basically been tested on macOS High Sierra, Catalina, BigSur, and [[https://www.apple.com/jp/macos/][Monterey]] with combinations of two Full HD (1920x1080) monitors and one 4K monitor. Additionally, tested in Windows 10 and Linux (Ubuntu 20.04 with Emacs 26.3, CentOS 8.2, and openSUSE 15.1) with GTK, but they may still have some issues.
+
+** Move
+
+ - moom-move-frame
+
+*** Horizontal shift
+
+ - moom-move-frame-left
+ - moom-move-frame-right
+
+*** Centering
+
+ - moom-move-frame-to-center
+ - moom-move-frame-to-vertical-center
+ - moom-move-frame-to-horizontal-center
+
+** Fit
+
+*** edge
+
+ - moom-move-frame-to-edge-top
+ - moom-move-frame-to-edge-left
+ - moom-move-frame-to-edge-right
+ - moom-move-frame-to-edge-bottom
+
+*** center line
+
+ - moom-move-frame-to-centerline-from-top
+ - moom-move-frame-to-centerline-from-left
+ - moom-move-frame-to-centerline-from-right
+ - moom-move-frame-to-centerline-from-bottom
+
+** Expand
+
+These functions will not change font size in a frame.
+
+ - moom-change-frame-width-single
+ - moom-change-frame-width-double
+ - moom-change-frame-width-half-again
+ - moom-change-frame-width
+ - moom-change-frame-height
+ - moom-cycle-frame-height
+ - moom-change-frame-width-max (moom-fill-width)
+ - moom-change-frame-height-max (moom-fill-height)
+
+*** split and delete window
+
+ - moom-split-window
+ - moom-delete-windows
+
+** Fill screen
+
+These functions normally change font size in a frame. But the behavior can be changed by =M-x moom-toggle-font-module=.
+
+ - moom-fill-screen
+ - moom-fill-band
+ - moom-fill-top
+ - moom-fill-bottom
+ - moom-fill-left
+ - moom-fill-right
+ - moom-fill-top-left
+ - moom-fill-top-right
+ - moom-fill-bottom-left
+ - moom-fill-bottom-right
+
+Note - If you find any problems around font settings when resizing the Emacs frame, you can easily disable the feature in =moom-font.el=. Just change =moom-use-font-module= to nil in your init.el. =M-x moom-toggle-font-module= can also control if the font module is utilized or not.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (setq moom-use-font-module nil))
+#+end_src
+
+** Other functions
+
+ - moom-reset
+ - moom-undo
+ - moom-update-height-steps
+ - moom-check-user-margin
+ - moom-update-user-margin
+ - moom-identify-current-monitor
+ - moom-print-monitors
+ - moom-jump-to-monitor
+ - moom-cycle-monitors
+ - moom-restore-last-status
+ - moom-toggle-font-module
+ - moom-toggle-frame-maximized
+ - moom-cycle-line-spacing
+ - moom-reset-line-spacing
+ - moom-generate-font-table
+ - moom-print-status
+ - moom-version
+
+(obsoleted)
+ - moom-screen-margin (was replaced with moom-check-user-margin)
+
+*** How to setup screen margins
+
+For macOS users, the default margin is =(23 0 0 0)=. And for other system types, it is also automatically configured using combination of =frame-monitor-geometry= and =frame-monitor-workarea= when =moom-mode= is activated. But the actual work area is probably depends on user environment. Therefore, =moom.el= provides a capability that you can control the actual active region on your screen by setting =moom-user-margin= in init.el.
+
+#+begin_src emacs-lisp
+(setq moom-user-margin '(50 50 50 50)) ;; {top, bottom, left, right}
+(moom-mode 1)
+#+end_src
+
+Each value means a margin from the ~top~, ~bottom~, ~left~, and ~right~ edge of your screen. If you want to test some combinations of the margins, then =M-x moom-check-user-margin= could be helpful since it provides an interactive way to check the actual region on a screen and save the tested value for the Emacs session.
+
+It is also useful to use =moom-update-user-margin= directly by putting new margin or interactively. Note that =moom-check-user-margin= internally calls =moom-update-user-margin=.
+
+#+begin_src emacs-lisp
+(moom-update-user-margin '(50 50 50 50)) ;; {top, bottom, left, right}
+#+end_src
+
+The =moom-check-user-margin= and =moom-update-user-margin= will change =moom-user-margin= in an Emacs session, however, the updated margins will NOT be saved as a permanent value, so please configure the margins in your init.el explicitly for the next session.
+
+* Extension to integrate font resizing
+
+No need to load =moom-font.el= explicitly. If the package is installed in your system, then it will be activated automatically. The package is basically provided for the users who rely on Japanese fonts. And if you will never user the font module without deleting =moom-font.el=, please configure =moom-use-font-module= to nil before activating =moom-mode= by =(moom-mode 1)=.
+
+#+caption: demo for increasing and decreasing fonts, frame maximized
+[[https://github.com/takaxp/contents/blob/master/moom/demo2.gif]]
+
+** Setting
+
+Font names for ASCII and Japanese font are now automatically identified without user action when =moom-mode= is activated. But =moom-font-ascii-scale= and =moom-font-ja-scale= should be configured still manually according to your environment. If you don't satisfy the automatically configured setting for ASCII and Japanese font, then please set these parameters manually by functions of =moom-font-ascii= or =moom-font-ja=.
+
+The default values for =moom-font-ascii-scale= and =moom-font-ja-scale= are =1.0= and =1.2= respectably. The scaling factors for each font are integrated into =face-font-rescale-alist= properly.
+
+If you don't know which fonts are used in Emacs frame, you can easily check them by ~M-x moom-font-print-name-at-point~ or ~M-x describe-char~ on a character.
+
+The following text is an example message when you type ~M-x moom-font-print-name-at-point~.
+
+#+begin_src txt
+[moom-font] It’s "Menlo". Call ‘moom-font-ja’ or ‘moom-font-ascii’ with "Menlo".
+#+end_src
+
+After you identify the font names in a buffer, then please configure them as follows:
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom-font"
+  (setq moom-font-ascii-scale 1.0)
+  (setq moom-font-ja-scale 1.2)
+  (moom-font-ascii "Menlo") ;; Ricty Diminished, Inconsolata
+  (moom-font-ja "Migu 2M")) ;; Hiragino Maru Gothic Pro
+#+end_src
+
+Normally, ASCII and Japanese fonts will be updated when resizing fonts. But if you provide an optional argument to =moom-font-ascii= or =moom-font-ja=, the given font is immediately applied and reflected in each buffer. See the following example setting.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom-font"
+  (moom-font-ascii "Menlo" '(:immediate t))
+  (moom-font-ja "Migu 2M" '(:immediate t)))
+#+end_src
+
+When you find the column exceeds 80 when the frame is maximized, then configure =moom-scaling-gradient= properly. It depends on ASCII font type. For instance, ~1.66~ (default) for Menlo, Monaco, ~2.0~ for Inconsolata, MS Gothic, and TakaoGothic. Please see the following section.
+
+*** Font table
+
+You can also use =M-x moom-generate-font-table= to identify appropriate values of =moom-scaling-gradient=, and additionally =moom-font-table=. After calling =moom-generate-font-table=, the current buffer will be changed to the ~*moom-font*~ buffer. Please follow the instructions described in that buffer.
+
+Here is an example. ~Monaco~ is used for ASCII font and ~Migu 2M~ is used for Japanese font in these images. The upper image shows a gap between strings in ASCII and Japanese at the first line, the font table is not defined in this case. On the other hand, the lower image shows no gap since the font table is utilized to identify the correct size of font. You can freely customize the font table in you init.el for your convenience.
+
+#+caption: Without font table (Monaco: 13pt 8px)
+[[https://github.com/takaxp/contents/blob/master/moom/monaco-13pt8px.png]]
+
+#+caption: With font table (Monaco: 14pt 8px)
+[[https://github.com/takaxp/contents/blob/master/moom/monaco-14pt8px.png]]
+
+** Resize font
+
+ - moom-font-increase
+ - moom-font-decrease
+ - moom-font-resize
+ - moom-font-size-reset
+
+** Font setting
+
+ - moom-font-ja
+ - moom-font-ascii
+
+** Other functions
+
+ - moom-font-print-name-at-point
+
+* User variables
+** moom.el
+
+#+caption: User variables in moom.el
+|                                      | default                            | type    |
+|--------------------------------------+------------------------------------+---------|
+| moom-move-frame-pixel-offset         | '(0 . 0)                           | sexp    |
+| moom-min-frame-height                | 16                                 | integer |
+| moom-init-line-spacing               | line-spacing                       | float   |
+| moom-min-line-spacing                | 0.1                                | float   |
+| moom-max-line-spacing                | 0.8                                | float   |
+| moom-frame-width-single              | 80                                 | integer |
+| moom-frame-width-double              | 163                                | integer |
+| moom-horizontal-shifts               | '(200 200)                         | choice  |
+| moom-fill-band-options               | '(:direction vertical :range 50.0) | plist   |
+| moom-scaling-gradient                | 1.66                               | float   |
+| moom-moom-display-line-numbers-width | 6                                  | integer |
+| moom-command-with-centering          | '(split delete)                    | list    |
+| moom-user-margin                     | '(0 0 0 0)                         | list    |
+| moom-use-font-module                 | t                                  | boolean |
+| moom-command-history-length          | 100                                | integer |
+| moom-verbose                         | nil                                | boolean |
+| moom-lighter                         | Moom                               | string  |
+
+*** moom-command-with-centering
+
+The following commands will centerize the frame position in display if =moom-command-with-centering= includes the corresponding values. If you specify =nil= then no commands will centerize the frame.
+
+| Value      | Command                            |
+|------------+------------------------------------|
+| split      | moom-split-window                  |
+| delete     | moom-delete-windows                |
+| single     | moom-change-frame-width-single     |
+| double     | moom-change-frame-width-double     |
+| half-again | moom-change-frame-width-half-again |
+
+** moom-font.el
+
+#+caption: User variables in moom-font.el
+|                       | default | type                            |
+|-----------------------+---------+---------------------------------|
+| moom-font-ja-scale    | 1.2     | float                           |
+| moom-font-ascii-scale | 1.0     | float                           |
+| moom-font-table       | nil     | (repeat (list integer integer)) |
+| moom-font-verbose     | nil     | boolean                         |
+
+Note - *(breaking changes at v1.2.1)* ~moom-font-init-size~ was hidden. The size is now automatically detected. If you want to use customized variable, please use =moom-font-ascii= with ~:size~ option like =(moom-font-ascii "Inconsolata" :size 14)=.
+
+Note - *(breaking changes at v1.2.0)* Variables of ~moom-font-ascii~ and ~moom-font-ja~ were hidden so that font settings could be controlled conveniently by utility functions. Please utilize each function of the same name to setup fonts.
+
+* Example keybindings
+** Overview
+
+In general, =Cmd-<TAB>= is used to switch windows, which is not limited to Emacs.app. So it is natural to concentrate all keybindings associated to control frame position and size into the left side of your keyboard with pressing =Cmd=. The following example keybindings are basically designed in that manner.
+
+#+caption: Assgined keys
+[[https://github.com/takaxp/contents/blob/master/moom/layout.png]]
+
+You can use =moom-recommended-keybindings= to set keybindings for each API in a bundle. The function require a list argument or =all=. The list can contain multiple API types. When the argument is =(move fit expand fill font reset undo)= , it is identical to =all=.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (moom-recommended-keybindings '(move fit expand fill font reset undo))) ;; 'all
+#+end_src
+
+Note: If you don't want to rely on using function key to execute a moom command, then add a =wof= option for =moom-recommended-keybindings= as follows:
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (moom-recommended-keybindings '(all wof))) ;; wof: WithOut Function key
+#+end_src
+
+| command                        | without wof | with wof  |
+|--------------------------------+-------------+-----------|
+| moom-move-frame-to-edge-left   | M-<f1>      | C-c e l   |
+| moom-move-frame-to-edge-right  | M-<f3>      | C-c e r   |
+| moom-move-frame-to-edge-top    | <f1>        | C-c e t   |
+| moom-move-frame-to-edge-bottom | S-<f1>      | C-c e b   |
+| moom-cycle-frame-height        | <f2>        | C-2       |
+| moom-toggle-frame-maximized    | M-<f2>      | C-c f f x |
+
+** Move
+
+[[https://github.com/takaxp/contents/blob/master/moom/shifts.gif]] [[https://github.com/takaxp/contents/blob/master/moom/move-right.gif]] [[https://github.com/takaxp/contents/blob/master/moom/center.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "M-0") 'moom-move-frame) ;; to top left corner
+  (define-key moom-mode-map (kbd "M-1") 'moom-move-frame-left)
+  (define-key moom-mode-map (kbd "M-2") 'moom-move-frame-to-center)
+  (define-key moom-mode-map (kbd "M-3") 'moom-move-frame-right))
+#+end_src
+
+** Fit
+
+[[https://github.com/takaxp/contents/blob/master/moom/edges.gif]] [[https://github.com/takaxp/contents/blob/master/moom/corners.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "M-<f1>") 'moom-move-frame-to-edge-left)
+  (define-key moom-mode-map (kbd "M-<f3>") 'moom-move-frame-to-edge-right)
+  (define-key moom-mode-map (kbd "<f1>") 'moom-move-frame-to-edge-top)
+  (define-key moom-mode-map (kbd "S-<f1>") 'moom-move-frame-to-edge-bottom))
+#+end_src
+
+Additionally, move onto the center line.
+
+[[https://github.com/takaxp/contents/blob/master/moom/centerline.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "C-c f c l") 'moom-move-frame-to-centerline-from-left)
+  (define-key moom-mode-map (kbd "C-c f c r") 'moom-move-frame-to-centerline-from-right)
+  (define-key moom-mode-map (kbd "C-c f c t") 'moom-move-frame-to-centerline-from-top)
+  (define-key moom-mode-map (kbd "C-c f c b") 'moom-move-frame-to-centerline-from-bottom))
+#+end_src
+
+** Expand
+[[https://github.com/takaxp/contents/blob/master/moom/cycle-height.gif]] [[https://github.com/takaxp/contents/blob/master/moom/expand.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "<f2>") 'moom-cycle-frame-height)
+  (define-key moom-mode-map (kbd "C-c f s") 'moom-change-frame-width-single)
+  (define-key moom-mode-map (kbd "C-c f d") 'moom-change-frame-width-double)
+  (define-key moom-mode-map (kbd "C-c f a") 'moom-change-frame-width-half-again)
+  (define-key moom-mode-map (kbd "C-c f S") 'moom-split-window)
+  (define-key moom-mode-map (kbd "C-c f D") 'moom-delete-windows)
+  (define-key moom-mode-map (kbd "C-c f w") 'moom-change-frame-width-max)
+  (define-key moom-mode-map (kbd "C-c f h") 'moom-change-frame-height-max))
+#+end_src
+
+** Fill
+:PROPERTIES:
+:ID:       4FF1C514-E9BD-4A98-91B4-916578FB697D
+:END:
+
+[[https://github.com/takaxp/contents/blob/master/moom/fill.gif]] [[https://github.com/takaxp/contents/blob/master/moom/quarters.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "C-c f f t") 'moom-fill-top)
+  (define-key moom-mode-map (kbd "C-c f f b") 'moom-fill-bottom)
+  (define-key moom-mode-map (kbd "C-c f f l") 'moom-fill-left)
+  (define-key moom-mode-map (kbd "C-c f f r") 'moom-fill-right)
+  (define-key moom-mode-map (kbd "C-c f f 1") 'moom-fill-top-left)
+  (define-key moom-mode-map (kbd "C-c f f 2") 'moom-fill-top-right)
+  (define-key moom-mode-map (kbd "C-c f f 3") 'moom-fill-bottom-left)
+  (define-key moom-mode-map (kbd "C-c f f 4") 'moom-fill-bottom-right)
+  (define-key moom-mode-map (kbd "C-c f f m") 'moom-fill-band)
+  ;; (define-key moom-mode-map (kbd "C-c f f w") 'moom-fill-width)
+  ;; (define-key moom-mode-map (kbd "C-c f f h") 'moom-fill-height)
+)
+#+end_src
+
+** Fill (screen by toggle)
+
+[[https://github.com/takaxp/contents/blob/master/moom/fill-screen.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "M-<f2>") 'moom-toggle-frame-maximized))
+#+end_src
+
+Note: When maximizing a frame, =moom-fill-screen= is called internally.
+
+** Reset, resize, and undo
+*** Reset Frame size, position, and font size
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "C-c C-0") 'moom-reset))
+#+end_src
+
+*** Undo command history
+
+=moom= stores command history. The maximum numbers of the history is limited by =moom-command-history-length=. The default value is 1000.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "C-c C-/") 'moom-undo))
+#+end_src
+
+*** Font size (require moom-font.el)
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (define-key moom-mode-map (kbd "C--") 'moom-font-decrease)
+  (define-key moom-mode-map (kbd "C-=") 'moom-font-increase)
+  (define-key moom-mode-map (kbd "C-0") 'moom-font-size-reset)
+  (define-key moom-mode-map (kbd "C-_") 'text-scale-decrease) ;; built-in for ascii
+  (define-key moom-mode-map (kbd "C-+") 'text-scale-increase) ;; built-in for ascii
+
+  ;; Recommended for stable presentation during font size increasing
+  (add-hook 'moom-font-after-resize-hook #'moom-move-frame-to-edge-top))
+#+end_src
+
+* Collaboration with other packages
+** Org mode (org-agenda)
+
+Expand the frame width temporarily during org-agenda is active.
+
+[[https://github.com/takaxp/contents/blob/master/moom/org-agenda.gif]]
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (with-eval-after-load "org"
+    (add-hook 'org-agenda-mode-hook #'moom-change-frame-width-half-again)
+    (defun advice:org-agenda--quit (&optional _bury)
+      (moom-change-frame-width))
+    (advice-add 'org-agenda--quit :after #'advice:org-agenda--quit)))
+#+end_src
+
+** Org mode (org-tree-slide)
+:PROPERTIES:
+:ID:       14AA17BD-897D-460F-A1E6-585E864830C2
+:END:
+
+Entering quickly to the frame maximized presentation with [[https://github.com/takaxp/org-tree-slide][org-tree-slide.el]]. No additional settings are required except activating moom-mode by =(moom-mode 1)=. Just =M-x moom-toggle-frame-maximized=. The font is automatically scaled to be maintained the frame width at 80 even if you use Japanese font.
+
+[[https://github.com/takaxp/contents/blob/master/moom/org-tree-slide.gif]]
+
+** Org mode
+
+Note - /Under consideration, but you can try./
+
+Run =org-redisplay-inline-images= after font resizing to synchronize the image width and font size automatically.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "moom"
+  (with-eval-after-load "org"
+    (add-hook 'moom-font-after-resize-hook #'org-redisplay-inline-images)))
+#+end_src
+
+* Hooks
+
+ - moom-before-fill-screen-hook
+ - moom-after-fill-screen-hook
+ - moom-resize-frame-height-hook
+ - moom-split-window-hook
+ - moom-delete-window-hook
+ - moom-before-setup-hook
+ - moom-after-select-monitor-hook
+ - moom-font-before-resize-hook (in moom-font.el)
+ - moom-font-after-resize-hook (in moom-font.el)
+
+* Acknowledgment
+
+This package is highly inspired from [[https://manytricks.com/moom/]["Moom"]] released by [[https://manytricks.com/][Many Tricks]]. Moom stands for "Mo"ve and zo"om". Cool!
+
+If you like and need the capabilities of changing window position and size by keyboard at the OS level, buy [[https://manytricks.com/moom/][Moom]] now!
+
+** Keycastr
+
+For writing README, [[https://github.com/keycastr/keycastr][keycastr]] was utilized to capture keystrokes of each command. Thanks! but ~Shift+F1~ was recorded as ~?~. Haha... :p
+
+* Related packages
+
+ 1) [[https://www.emacswiki.org/emacs/frame-cmds.el][frame-cmds.el]]
+    - This package provides many fundamental APIs to control frame and window. If you want to control them more specifically and precisely, you may want to try this nice package. But the license is not open and not distributed through MELPA.
+ 2) [[https://github.com/zonuexe/emacs-presentation-mode][presentation.el]]
+    - It is highly recommended to try this vital package to scale and restore text size easily for nice viewing when you present your source code rendered in the Emacs buffers. Find more details at the above repository.
